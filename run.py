@@ -113,6 +113,10 @@ def main():
     # Настраиваем окружение
     setup_environment()
     
+    # Определяем среду выполнения
+    is_railway = os.environ.get('RAILWAY_ENVIRONMENT') is not None or os.environ.get('PORT') is not None
+    port = int(os.environ.get('PORT', 8000))
+    
     # Инициализируем базу данных админов
     print("📁 Инициализация PostgreSQL базы данных админов...")
     try:
@@ -125,28 +129,44 @@ def main():
     
     print()
     print("🌐 Запуск веб-сервера...")
-    print("   URL: http://localhost:8000")
-    print("   Логин: admin")
-    print("   Пароль: admin")
-    print()
-    print("📋 Требования для работы:")
-    print("   • PostgreSQL сервер запущен")
-    print("   • База данных для админов настроена (ADMIN_DB_* или DATABASE_URL)")
-    print("   • База данных для профилей настроена (PROFILES_DB_*)")
-    print("   • Установлен SECRET_KEY")
-    print()
-    print("⏹️  Для остановки нажмите Ctrl+C")
+    
+    if is_railway:
+        print(f"   Railway Production Mode")
+        print(f"   Port: {port}")
+        print(f"   Host: 0.0.0.0")
+    else:
+        print("   URL: http://localhost:8000")
+        print("   Логин: admin")
+        print("   Пароль: admin")
+        print()
+        print("📋 Требования для работы:")
+        print("   • PostgreSQL сервер запущен")
+        print("   • База данных для админов настроена (ADMIN_DB_* или DATABASE_URL)")
+        print("   • База данных для профилей настроена (PROFILES_DB_*)")
+        print("   • Установлен SECRET_KEY")
+        print()
+        print("⏹️  Для остановки нажмите Ctrl+C")
+    
     print("=" * 50)
     
     try:
-        # Запуск приложения в режиме разработки
-        app.run(
-            debug=True,
-            host='127.0.0.1',
-            port=8000,
-            use_reloader=True,
-            use_debugger=True
-        )
+        # Запуск приложения
+        if is_railway:
+            # Продакшен режим для Railway
+            app.run(
+                host='0.0.0.0',  # ОБЯЗАТЕЛЬНО для Railway!
+                port=port,       # Порт от Railway
+                debug=False
+            )
+        else:
+            # Режим разработки
+            app.run(
+                debug=True,
+                host='127.0.0.1',
+                port=8000,
+                use_reloader=True,
+                use_debugger=True
+            )
     except KeyboardInterrupt:
         print("\n👋 Приложение остановлено")
         return 0
