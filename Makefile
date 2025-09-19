@@ -3,32 +3,32 @@
 # Основная команда для запуска всех тестов через pytest
 test:
 	@echo "Запуск всех тестов через pytest..."
-	pytest -v
+	.venv/bin/python -m pytest -v
 
 # Отдельные команды для конкретных тестов
 test-structure:
 	@echo "Запуск теста структуры проекта..."
-	pytest test_structure.py -v
+	.venv/bin/python -m pytest test_structure.py -v
 
 test-app:
 	@echo "Запуск теста Flask приложения..."
-	pytest test_app.py -v
+	.venv/bin/python -m pytest test_app.py -v
 
 test-models:
 	@echo "Запуск тестов моделей..."
-	pytest test_models.py -v
+	.venv/bin/python -m pytest test_models.py -v
 
 test-init-db:
 	@echo "Запуск тестов инициализации БД..."
-	pytest test_init_db.py -v
+	.venv/bin/python -m pytest test_init_db.py -v
 
 test-templates:
 	@echo "Запуск тестов шаблонов..."
-	pytest test_templates.py -v
+	.venv/bin/python -m pytest test_templates.py -v
 
 # Установка зависимостей
 install:
-	pip install -r requirements.txt
+	.venv/bin/pip install -r requirements.txt
 
 # Помощь по доступным командам
 help:

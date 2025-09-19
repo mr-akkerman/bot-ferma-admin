@@ -18,9 +18,10 @@ class TestFlaskApp:
     
     def test_main_route(self, client):
         """Тест доступности главного роута"""
-        response = client.get('/')
-        assert response.status_code == 200
-        assert response.data.decode() == "Admin Panel"
+        response = client.get('/', follow_redirects=False)
+        # Главный роут теперь редиректит неавторизованных пользователей на /login
+        assert response.status_code == 302
+        assert '/login' in response.location
     
     def test_database_config(self):
         """Тест наличия конфигурации баз данных"""
@@ -61,9 +62,9 @@ if __name__ == '__main__':
     # Тест главного роута
     try:
         with app.test_client() as client:
-            response = client.get('/')
-            assert response.status_code == 200
-            assert response.data.decode() == "Admin Panel"
+            response = client.get('/', follow_redirects=False)
+            assert response.status_code == 302
+            assert '/login' in response.location
         print("✓ Тест главного роута - ПРОЙДЕН")
     except Exception as e:
         print(f"✗ Тест главного роута - ПРОВАЛЕН: {e}")
