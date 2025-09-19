@@ -13,8 +13,20 @@
         </nav>
     </header>
     
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+    <div class="container">
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="{{ url_for('dashboard') }}">Дашборд</a></li>
+                    <li><a href="{{ url_for('admins') }}">Управление админами</a></li>
+                    <li><a href="{{ url_for('tools') }}">Инструменты</a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
 </body>
 </html>

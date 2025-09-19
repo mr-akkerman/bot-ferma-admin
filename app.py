@@ -36,6 +36,23 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Инициализация SQLAlchemy
 db.init_app(app)
 
+# Функция для проверки авторизации
+def require_auth():
+    """Проверяет авторизацию пользователя"""
+    return is_authenticated()
+
+# Обработчик before_request для защиты роутов
+@app.before_request
+def check_auth():
+    """Проверяет авторизацию перед каждым запросом"""
+    # Пропускаем проверку для /login и /logout
+    if request.endpoint in ['login', 'logout']:
+        return
+    
+    # Для всех остальных роутов проверяем авторизацию
+    if not require_auth():
+        return redirect(url_for('login'))
+
 # Функция инициализации базы данных
 def init_db():
     """Инициализация SQLite базы данных и создание дефолтного админа"""
@@ -93,8 +110,20 @@ def logout():
 
 @app.route('/dashboard')
 def dashboard():
-    """Дашборд админки (заглушка)"""
-    return "Dashboard - Admin Panel"
+    """Дашборд админки"""
+    return render_template('dashboard.html')
+
+
+@app.route('/admins')
+def admins():
+    """Управление админами"""
+    return render_template('admins.html')
+
+
+@app.route('/tools')
+def tools():
+    """Инструменты"""
+    return render_template('tools.html')
 
 if __name__ == '__main__':
     # Инициализация базы данных при запуске
