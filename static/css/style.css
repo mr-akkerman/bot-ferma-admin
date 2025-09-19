@@ -532,37 +532,135 @@ header nav h1 {
    АДАПТИВНОСТЬ
 ======================================== */
 
-@media (max-width: 1024px) {
+/* Очень широкие экраны (1920px+) */
+@media (min-width: 1920px) {
+  .container {
+    max-width: 1920px;
+    margin: 0 auto;
+  }
+  
   .main-content {
-    margin-left: 0;
-    padding: var(--spacing-3);
+    max-width: 1400px;
+    margin-left: 280px;
+    padding: var(--spacing-6);
   }
   
   .sidebar {
-    transform: translateX(-100%);
-    transition: transform 0.2s ease;
-  }
-  
-  .sidebar.open {
-    transform: translateX(0);
+    width: 280px;
   }
   
   .stats-cards {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-4);
+  }
+  
+  .stat-card {
+    padding: var(--spacing-4);
+  }
+  
+  .stat-value {
+    font-size: 40px;
   }
 }
 
+/* Стандартные широкие экраны (1200px - 1919px) */
+@media (min-width: 1200px) and (max-width: 1919px) {
+  .main-content {
+    max-width: 1200px;
+    padding: var(--spacing-4);
+  }
+  
+  .stats-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Средние экраны и планшеты (769px - 1199px) */
+@media (min-width: 769px) and (max-width: 1199px) {
+  .main-content {
+    margin-left: 256px;
+    padding: var(--spacing-3);
+    max-width: none;
+  }
+  
+  .stats-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-3);
+  }
+  
+  .groups-table,
+  .admins-table {
+    font-size: 14px;
+  }
+  
+  .admin-form {
+    padding: var(--spacing-3);
+  }
+}
+
+/* Планшеты и маленькие ноутбуки (481px - 768px) */
 @media (max-width: 768px) {
+  /* Header для мобильных */
   header {
     padding: var(--spacing-2);
+    position: relative;
+    height: auto;
+    min-height: 64px;
+  }
+  
+  header nav {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
   
   header nav h1 {
     font-size: 16px;
   }
   
+  /* Убираем фиксированное позиционирование sidebar */
+  .container {
+    display: block;
+    padding-top: 0;
+  }
+  
+  .sidebar {
+    position: relative;
+    width: 100%;
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--color-2);
+    padding: var(--spacing-2) 0;
+  }
+  
+  .sidebar-nav {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .sidebar-nav ul {
+    display: flex;
+    flex-direction: row;
+    min-width: max-content;
+    padding: 0 var(--spacing-2);
+  }
+  
+  .sidebar-nav li {
+    flex-shrink: 0;
+  }
+  
+  .sidebar-nav a {
+    margin: 0 var(--spacing-1);
+    padding: var(--spacing-1) var(--spacing-2);
+    white-space: nowrap;
+  }
+  
+  /* Main content */
   .main-content {
-    padding: var(--spacing-2);
+    margin-left: 0;
+    padding: var(--spacing-3);
   }
   
   .main-content h1 {
@@ -570,13 +668,28 @@ header nav h1 {
     margin-bottom: var(--spacing-3);
   }
   
-  .admin-form {
+  /* Карточки статистики */
+  .stats-cards {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2);
+  }
+  
+  .stat-card {
     padding: var(--spacing-2);
   }
   
+  .stat-value {
+    font-size: 28px;
+  }
+  
+  /* Таблицы */
   .groups-table,
   .admins-table {
     font-size: 12px;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
   }
   
   .groups-table th,
@@ -584,38 +697,215 @@ header nav h1 {
   .admins-table th,
   .admins-table td {
     padding: var(--spacing-1);
+    min-width: 100px;
   }
   
+  /* Формы */
+  .admin-form {
+    padding: var(--spacing-2);
+    margin-bottom: var(--spacing-3);
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="password"] {
+    font-size: 16px; /* Предотвращает зум на iOS */
+  }
+  
+  /* Кнопки */
+  .btn {
+    padding: 12px var(--spacing-2);
+    font-size: 14px;
+    min-height: 44px; /* Для удобства касания */
+  }
+  
+  .btn-small {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-height: 36px;
+  }
+  
+  /* Логин */
   .login-container {
     padding: var(--spacing-4);
     margin: var(--spacing-2);
+    max-width: none;
+  }
+}
+
+/* Мобильные телефоны (до 480px) */
+@media (max-width: 480px) {
+  /* Header еще более компактный */
+  header {
+    padding: var(--spacing-1) var(--spacing-2);
   }
   
-  .stats-cards {
-    gap: var(--spacing-2);
+  header nav h1 {
+    font-size: 14px;
+  }
+  
+  /* Sidebar еще более компактный */
+  .sidebar {
+    padding: var(--spacing-1) 0;
+  }
+  
+  .sidebar-nav a {
+    padding: var(--spacing-1);
+    font-size: 12px;
+  }
+  
+  /* Main content */
+  .main-content {
+    padding: var(--spacing-2);
+  }
+  
+  .main-content h1 {
+    font-size: 20px;
+    margin-bottom: var(--spacing-2);
+  }
+  
+  /* Карточки статистики */
+  .stat-card {
+    padding: var(--spacing-2);
+  }
+  
+  .stat-card h3 {
+    font-size: 12px;
+  }
+  
+  .stat-value {
+    font-size: 24px;
+  }
+  
+  /* Таблицы */
+  .groups-table,
+  .admins-table {
+    font-size: 11px;
+  }
+  
+  .groups-table th,
+  .groups-table td,
+  .admins-table th,
+  .admins-table td {
+    padding: 6px;
+    min-width: 80px;
+  }
+  
+  /* Действия в таблице */
+  .table-actions {
+    flex-direction: column;
+    gap: 4px;
+    align-items: stretch;
+  }
+  
+  .table-actions .btn {
+    width: 100%;
+    font-size: 11px;
+    padding: 6px;
+    min-height: 32px;
+  }
+  
+  /* Формы */
+  .admin-form {
+    padding: var(--spacing-2);
+  }
+  
+  .admin-form h3 {
+    font-size: 16px;
+  }
+  
+  .form-group label {
+    font-size: 12px;
+  }
+  
+  /* Логин */
+  .login-container {
+    padding: var(--spacing-3);
+    margin: var(--spacing-1);
+  }
+  
+  .login-container h2 {
+    font-size: 18px;
+  }
+  
+  /* Утилиты для мобильных */
+  .mobile-hide {
+    display: none;
+  }
+  
+  .mobile-full-width {
+    width: 100%;
+  }
+}
+
+/* Очень маленькие экраны (до 320px) */
+@media (max-width: 320px) {
+  .main-content {
+    padding: var(--spacing-1);
   }
   
   .stat-card {
+    padding: var(--spacing-1);
+  }
+  
+  .stat-value {
+    font-size: 20px;
+  }
+  
+  .admin-form {
+    padding: var(--spacing-1);
+  }
+  
+  .login-container {
+    padding: var(--spacing-2);
+    margin: var(--spacing-1);
+  }
+}
+
+/* Ландшафтная ориентация на мобильных */
+@media (max-width: 768px) and (orientation: landscape) {
+  .sidebar-nav ul {
+    flex-direction: row;
+  }
+  
+  .stats-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .main-content {
     padding: var(--spacing-2);
   }
 }
 
-@media (max-width: 480px) {
-  .table-actions {
-    flex-direction: column;
-    gap: 4px;
+/* Улучшения для touch устройств */
+@media (hover: none) and (pointer: coarse) {
+  .btn {
+    min-height: 44px;
+    padding: 12px var(--spacing-2);
   }
   
-  .btn-small {
-    padding: 4px 8px;
-    font-size: 11px;
+  .sidebar-nav a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
   
-  .groups-table,
-  .admins-table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
+  /* Убираем hover эффекты на touch устройствах */
+  .sidebar-nav a:hover,
+  .groups-table tbody tr:hover,
+  .admins-table tbody tr:hover,
+  .stat-card:hover,
+  .admin-form:hover {
+    background-color: inherit;
+    box-shadow: inherit;
+  }
+  
+  /* Добавляем active состояния для touch */
+  .btn:active {
+    opacity: 0.8;
+  }
+  
+  .sidebar-nav a:active {
+    background-color: var(--color-1);
   }
 }
 

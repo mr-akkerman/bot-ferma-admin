@@ -182,11 +182,37 @@ class TestVercelStyles:
         assert "border-color: var(--accent)" in self.css_content, "Focus должен менять цвет границы на accent"
     
     def test_responsive_design(self):
-        """Проверка адаптивного дизайна"""
-        # Media queries
-        assert "@media (max-width: 1024px)" in self.css_content, "Должны быть стили для планшетов"
-        assert "@media (max-width: 768px)" in self.css_content, "Должны быть стили для мобильных устройств"
-        assert "@media (max-width: 480px)" in self.css_content, "Должны быть стили для маленьких экранов"
+        """Проверка полного адаптивного дизайна"""
+        # Базовые media queries
+        responsive_breakpoints = [
+            "@media (min-width: 1920px)",      # Очень широкие экраны
+            "@media (min-width: 1200px)",      # Широкие экраны  
+            "@media (min-width: 769px)",       # Средние экраны
+            "@media (max-width: 768px)",       # Планшеты
+            "@media (max-width: 480px)",       # Мобильные
+            "@media (max-width: 320px)",       # Очень маленькие экраны
+        ]
+        
+        for breakpoint in responsive_breakpoints:
+            assert breakpoint in self.css_content, f"Должен быть breakpoint: {breakpoint}"
+        
+        # Специальные media queries
+        assert "@media (max-width: 768px) and (orientation: landscape)" in self.css_content, "Должна быть поддержка ландшафтной ориентации"
+        assert "@media (hover: none) and (pointer: coarse)" in self.css_content, "Должна быть поддержка touch устройств"
+        
+        # Проверка ключевых адаптивных элементов
+        adaptive_elements = [
+            "grid-template-columns: repeat(4, 1fr)",  # 4 колонки для широких экранов
+            "grid-template-columns: repeat(3, 1fr)",  # 3 колонки для средних
+            "grid-template-columns: repeat(2, 1fr)",  # 2 колонки для планшетов  
+            "grid-template-columns: 1fr",             # 1 колонка для мобильных
+            "overflow-x: auto",                       # Горизонтальная прокрутка таблиц
+            "min-height: 44px",                       # Минимальная высота для touch
+            "-webkit-overflow-scrolling: touch",      # Плавная прокрутка на iOS
+        ]
+        
+        for element in adaptive_elements:
+            assert element in self.css_content, f"Должен быть адаптивный элемент: {element}"
     
     def test_no_forbidden_styles(self):
         """Проверка отсутствия запрещенных стилей"""
