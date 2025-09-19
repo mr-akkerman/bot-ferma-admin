@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Admin Panel</h1>
+            <div class="header-actions">
+                <form method="POST" action="{{ url_for('logout') }}" style="display: inline;">
+                    <button type="submit" class="btn btn-danger btn-small">Выйти</button>
+                </form>
+            </div>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="{{ url_for('dashboard') }}">Дашборд</a></li>
+                    <li><a href="{{ url_for('admins') }}">Управление админами</a></li>
+                    <li><a href="{{ url_for('tools') }}">Инструменты</a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

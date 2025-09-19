@@ -1,0 +1,981 @@
+/* Vercel Geist Design System - Admin Panel CSS */
+
+/* ========================================
+   БАЗОВЫЕ СТИЛИ И ЦВЕТОВАЯ СХЕМА
+======================================== */
+
+/* CSS Variables для темной цветовой схемы Vercel */
+:root {
+  /* Темная цветовая схема Vercel Geist */
+  --background-1: #000000;     /* основной черный фон */
+  --background-2: #111111;     /* темный фон для UI компонентов */
+  --color-1: #1A1A1A;          /* hover состояния */
+  --color-2: #262626;          /* active состояния и границы */
+  --color-3: #404040;          /* borders для мелких элементов */
+  --foreground-1: #FAFAFA;     /* основной белый текст */
+  --foreground-2: #A1A1A1;     /* серый вторичный текст */
+  --accent: #FFFFFF;           /* белый для кнопок и активных элементов */
+  
+  /* Danger цвета */
+  --danger: #EF4444;
+  --danger-hover: #DC2626;
+  
+  /* Success цвета */
+  --success: #10B981;
+  --success-bg: #0F1419;
+  --success-border: #1F2937;
+  
+  /* Error цвета */
+  --error: #EF4444;
+  --error-bg: #1F1415;
+  --error-border: #2D1B1F;
+  
+  /* Типографика */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  
+  /* Размеры по 8px сетке */
+  --spacing-1: 8px;
+  --spacing-2: 16px;
+  --spacing-3: 24px;
+  --spacing-4: 32px;
+  --spacing-6: 48px;
+  
+  /* Радиусы */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  
+  /* Тени */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  
+  /* Переходы */
+  --transition: all 0.15s ease;
+}
+
+/* Сброс стилей и базовые настройки */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-1);
+  color: var(--foreground-1);
+  line-height: 1.5;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================
+   HEADER
+======================================== */
+
+header {
+  background-color: var(--background-1);
+  border-bottom: 1px solid var(--color-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 64px;
+  box-sizing: border-box;
+}
+
+header nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+header nav h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--foreground-1);
+  flex-shrink: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  flex-shrink: 0;
+}
+
+.header-actions form {
+  margin: 0;
+  padding: 0;
+}
+
+.header-actions .btn {
+  margin: 0;
+}
+
+/* ========================================
+   LAYOUT CONTAINER
+======================================== */
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 64px; /* высота header */
+}
+
+/* ========================================
+   SIDEBAR NAVIGATION
+======================================== */
+
+.sidebar {
+  width: 240px;
+  background-color: var(--background-2);
+  border-right: 1px solid var(--color-2);
+  padding: var(--spacing-3) 0;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-nav li {
+  margin: 0;
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: 12px var(--spacing-2);
+  color: var(--foreground-1);
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  margin: 0 var(--spacing-2);
+  transition: var(--transition);
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--color-1);
+}
+
+.sidebar-nav a.active {
+  background-color: var(--accent);
+  color: var(--background-1);
+}
+
+/* Разделитель в меню */
+.sidebar-nav .separator {
+  height: 1px;
+  background-color: var(--color-2);
+  margin: var(--spacing-2);
+}
+
+/* ========================================
+   MAIN CONTENT AREA
+======================================== */
+
+.main-content {
+  flex: 1;
+  margin-left: 256px; /* 240px + 16px отступ */
+  padding: var(--spacing-4);
+  background-color: var(--background-1);
+  max-width: 1200px;
+}
+
+.main-content h1 {
+  margin: 0 0 var(--spacing-4) 0;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--foreground-1);
+  line-height: 1.2;
+}
+
+/* ========================================
+   КАРТОЧКИ СТАТИСТИКИ
+======================================== */
+
+.global-statistics {
+  margin-bottom: var(--spacing-6);
+}
+
+.global-statistics h2 {
+  margin: 0 0 var(--spacing-3) 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--foreground-1);
+}
+
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-3);
+}
+
+.stat-card {
+  background-color: var(--background-1);
+  border: 1px solid var(--color-2);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-3);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.stat-card:hover {
+  border-color: var(--color-3);
+}
+
+.stat-card h3 {
+  margin: 0 0 var(--spacing-1) 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--foreground-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-value {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--foreground-1);
+  line-height: 1;
+}
+
+/* ========================================
+   SECTIONS
+======================================== */
+
+.groups-statistics,
+.admin-section {
+  margin-bottom: var(--spacing-6);
+}
+
+.groups-statistics h2,
+.admin-section h2 {
+  margin: 0 0 var(--spacing-3) 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--foreground-1);
+}
+
+/* ========================================
+   ТАБЛИЦЫ
+======================================== */
+
+.groups-table,
+.admins-table {
+  width: 100%;
+  background-color: var(--background-1);
+  border: 1px solid var(--color-2);
+  border-radius: var(--radius-md);
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-3);
+}
+
+.groups-table th,
+.admins-table th {
+  background-color: var(--background-2);
+  padding: 12px var(--spacing-2);
+  text-align: left;
+  font-weight: 600;
+  color: var(--foreground-1);
+  font-size: 14px;
+  border-bottom: 1px solid var(--color-2);
+}
+
+.groups-table th:first-child,
+.admins-table th:first-child {
+  border-top-left-radius: var(--radius-md);
+}
+
+.groups-table th:last-child,
+.admins-table th:last-child {
+  border-top-right-radius: var(--radius-md);
+}
+
+.groups-table td,
+.admins-table td {
+  padding: 12px var(--spacing-2);
+  border-bottom: 1px solid var(--color-2);
+  color: var(--foreground-1);
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.groups-table tbody tr:last-child td,
+.admins-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.groups-table tbody tr:hover,
+.admins-table tbody tr:hover {
+  background-color: var(--color-1);
+}
+
+/* ========================================
+   ФОРМЫ
+======================================== */
+
+.admin-form {
+  background-color: var(--background-1);
+  border: 1px solid var(--color-2);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-form h3 {
+  margin: 0 0 var(--spacing-3) 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--foreground-1);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-2);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: var(--spacing-1);
+  font-weight: 500;
+  color: var(--foreground-1);
+  font-size: 14px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--color-3);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: var(--font-family);
+  background-color: var(--background-1);
+  color: var(--foreground-1);
+  transition: var(--transition);
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.form-group input[type="text"]:disabled,
+.form-group input[type="password"]:disabled {
+  background-color: var(--background-2);
+  color: var(--foreground-2);
+  border-color: var(--color-2);
+  cursor: not-allowed;
+}
+
+/* ========================================
+   КНОПКИ
+======================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px var(--spacing-2);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--font-family);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: var(--background-1);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-3);
+  color: var(--foreground-1);
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  color: var(--background-1);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: var(--danger-hover);
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.btn-large {
+  padding: 12px var(--spacing-3);
+  font-size: 16px;
+}
+
+/* ========================================
+   ALERTS И СООБЩЕНИЯ
+======================================== */
+
+.alert {
+  padding: var(--spacing-2);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-3);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.alert-error,
+.error-message {
+  background-color: var(--error-bg);
+  border: 1px solid var(--error-border);
+  color: var(--error);
+}
+
+.alert-success {
+  background-color: var(--success-bg);
+  border: 1px solid var(--success-border);
+  color: var(--success);
+}
+
+.no-data {
+  background-color: var(--background-2);
+  border: 1px solid var(--color-2);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-6);
+  text-align: center;
+  color: var(--foreground-2);
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* ========================================
+   ВСПОМОГАТЕЛЬНЫЕ КЛАССЫ
+======================================== */
+
+.table-actions {
+  display: flex;
+  gap: var(--spacing-1);
+  align-items: center;
+}
+
+/* ========================================
+   СТРАНИЦА ЛОГИНА
+======================================== */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background-2);
+  padding: var(--spacing-3);
+}
+
+.login-container {
+  background-color: var(--background-1);
+  border: 1px solid var(--color-2);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-6);
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-container h2 {
+  margin: 0 0 var(--spacing-4) 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--foreground-1);
+  text-align: center;
+}
+
+.login-container .form-group {
+  margin-bottom: var(--spacing-3);
+}
+
+.login-container button {
+  width: 100%;
+  margin-top: var(--spacing-2);
+}
+
+/* ========================================
+   АДАПТИВНОСТЬ
+======================================== */
+
+/* Очень широкие экраны (1920px+) */
+@media (min-width: 1920px) {
+  .container {
+    max-width: 1920px;
+    margin: 0 auto;
+  }
+  
+  .main-content {
+    max-width: 1400px;
+    margin-left: 280px;
+    padding: var(--spacing-6);
+  }
+  
+  .sidebar {
+    width: 280px;
+  }
+  
+  .stats-cards {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-4);
+  }
+  
+  .stat-card {
+    padding: var(--spacing-4);
+  }
+  
+  .stat-value {
+    font-size: 40px;
+  }
+}
+
+/* Стандартные широкие экраны (1200px - 1919px) */
+@media (min-width: 1200px) and (max-width: 1919px) {
+  .main-content {
+    max-width: 1200px;
+    padding: var(--spacing-4);
+  }
+  
+  .stats-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Средние экраны и планшеты (769px - 1199px) */
+@media (min-width: 769px) and (max-width: 1199px) {
+  .main-content {
+    margin-left: 256px;
+    padding: var(--spacing-3);
+    max-width: none;
+  }
+  
+  .stats-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-3);
+  }
+  
+  .groups-table,
+  .admins-table {
+    font-size: 14px;
+  }
+  
+  .admin-form {
+    padding: var(--spacing-3);
+  }
+}
+
+/* Планшеты и маленькие ноутбуки (481px - 768px) */
+@media (max-width: 768px) {
+  /* Header для мобильных */
+  header {
+    padding: var(--spacing-2);
+    position: relative;
+    height: auto;
+    min-height: 64px;
+  }
+  
+  header nav {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  header nav h1 {
+    font-size: 16px;
+  }
+  
+  /* Убираем фиксированное позиционирование sidebar */
+  .container {
+    display: block;
+    padding-top: 0;
+  }
+  
+  .sidebar {
+    position: relative;
+    width: 100%;
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--color-2);
+    padding: var(--spacing-2) 0;
+  }
+  
+  .sidebar-nav {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .sidebar-nav ul {
+    display: flex;
+    flex-direction: row;
+    min-width: max-content;
+    padding: 0 var(--spacing-2);
+  }
+  
+  .sidebar-nav li {
+    flex-shrink: 0;
+  }
+  
+  .sidebar-nav a {
+    margin: 0 var(--spacing-1);
+    padding: var(--spacing-1) var(--spacing-2);
+    white-space: nowrap;
+  }
+  
+  /* Main content */
+  .main-content {
+    margin-left: 0;
+    padding: var(--spacing-3);
+  }
+  
+  .main-content h1 {
+    font-size: 24px;
+    margin-bottom: var(--spacing-3);
+  }
+  
+  /* Карточки статистики */
+  .stats-cards {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2);
+  }
+  
+  .stat-card {
+    padding: var(--spacing-2);
+  }
+  
+  .stat-value {
+    font-size: 28px;
+  }
+  
+  /* Таблицы */
+  .groups-table,
+  .admins-table {
+    font-size: 12px;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .groups-table th,
+  .groups-table td,
+  .admins-table th,
+  .admins-table td {
+    padding: var(--spacing-1);
+    min-width: 100px;
+  }
+  
+  /* Формы */
+  .admin-form {
+    padding: var(--spacing-2);
+    margin-bottom: var(--spacing-3);
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="password"] {
+    font-size: 16px; /* Предотвращает зум на iOS */
+  }
+  
+  /* Кнопки */
+  .btn {
+    padding: 12px var(--spacing-2);
+    font-size: 14px;
+    min-height: 44px; /* Для удобства касания */
+  }
+  
+  .btn-small {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-height: 36px;
+  }
+  
+  /* Логин */
+  .login-container {
+    padding: var(--spacing-4);
+    margin: var(--spacing-2);
+    max-width: none;
+  }
+}
+
+/* Мобильные телефоны (до 480px) */
+@media (max-width: 480px) {
+  /* Header еще более компактный */
+  header {
+    padding: var(--spacing-1) var(--spacing-2);
+  }
+  
+  header nav h1 {
+    font-size: 14px;
+  }
+  
+  /* Sidebar еще более компактный */
+  .sidebar {
+    padding: var(--spacing-1) 0;
+  }
+  
+  .sidebar-nav a {
+    padding: var(--spacing-1);
+    font-size: 12px;
+  }
+  
+  /* Main content */
+  .main-content {
+    padding: var(--spacing-2);
+  }
+  
+  .main-content h1 {
+    font-size: 20px;
+    margin-bottom: var(--spacing-2);
+  }
+  
+  /* Карточки статистики */
+  .stat-card {
+    padding: var(--spacing-2);
+  }
+  
+  .stat-card h3 {
+    font-size: 12px;
+  }
+  
+  .stat-value {
+    font-size: 24px;
+  }
+  
+  /* Таблицы */
+  .groups-table,
+  .admins-table {
+    font-size: 11px;
+  }
+  
+  .groups-table th,
+  .groups-table td,
+  .admins-table th,
+  .admins-table td {
+    padding: 6px;
+    min-width: 80px;
+  }
+  
+  /* Действия в таблице */
+  .table-actions {
+    flex-direction: column;
+    gap: 4px;
+    align-items: stretch;
+  }
+  
+  .table-actions .btn {
+    width: 100%;
+    font-size: 11px;
+    padding: 6px;
+    min-height: 32px;
+  }
+  
+  /* Формы */
+  .admin-form {
+    padding: var(--spacing-2);
+  }
+  
+  .admin-form h3 {
+    font-size: 16px;
+  }
+  
+  .form-group label {
+    font-size: 12px;
+  }
+  
+  /* Логин */
+  .login-container {
+    padding: var(--spacing-3);
+    margin: var(--spacing-1);
+  }
+  
+  .login-container h2 {
+    font-size: 18px;
+  }
+  
+  /* Утилиты для мобильных */
+  .mobile-hide {
+    display: none;
+  }
+  
+  .mobile-full-width {
+    width: 100%;
+  }
+}
+
+/* Очень маленькие экраны (до 320px) */
+@media (max-width: 320px) {
+  .main-content {
+    padding: var(--spacing-1);
+  }
+  
+  .stat-card {
+    padding: var(--spacing-1);
+  }
+  
+  .stat-value {
+    font-size: 20px;
+  }
+  
+  .admin-form {
+    padding: var(--spacing-1);
+  }
+  
+  .login-container {
+    padding: var(--spacing-2);
+    margin: var(--spacing-1);
+  }
+}
+
+/* Ландшафтная ориентация на мобильных */
+@media (max-width: 768px) and (orientation: landscape) {
+  .sidebar-nav ul {
+    flex-direction: row;
+  }
+  
+  .stats-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .main-content {
+    padding: var(--spacing-2);
+  }
+}
+
+/* Улучшения для touch устройств */
+@media (hover: none) and (pointer: coarse) {
+  .btn {
+    min-height: 44px;
+    padding: 12px var(--spacing-2);
+  }
+  
+  .sidebar-nav a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Убираем hover эффекты на touch устройствах */
+  .sidebar-nav a:hover,
+  .groups-table tbody tr:hover,
+  .admins-table tbody tr:hover,
+  .stat-card:hover,
+  .admin-form:hover {
+    background-color: inherit;
+    box-shadow: inherit;
+  }
+  
+  /* Добавляем active состояния для touch */
+  .btn:active {
+    opacity: 0.8;
+  }
+  
+  .sidebar-nav a:active {
+    background-color: var(--color-1);
+  }
+}
+
+/* ========================================
+   ТЕМЫ И ВАРИАЦИИ
+======================================== */
+
+/* Hover эффекты для интерактивных элементов */
+.stat-card:hover,
+.admin-form:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Фокус для доступности */
+.btn:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Состояние загрузки */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--color-2);
+  border-top: 2px solid var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ========================================
+   УТИЛИТЫ
+======================================== */
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.hidden { display: none; }
+.visible { display: block; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: var(--spacing-1); }
+.mb-2 { margin-bottom: var(--spacing-2); }
+.mb-3 { margin-bottom: var(--spacing-3); }
+.mb-4 { margin-bottom: var(--spacing-4); }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: var(--spacing-1); }
+.mt-2 { margin-top: var(--spacing-2); }
+.mt-3 { margin-top: var(--spacing-3); }
+.mt-4 { margin-top: var(--spacing-4); }
+
+.p-0 { padding: 0; }
+.p-1 { padding: var(--spacing-1); }
+.p-2 { padding: var(--spacing-2); }
+.p-3 { padding: var(--spacing-3); }
+.p-4 { padding: var(--spacing-4); }
