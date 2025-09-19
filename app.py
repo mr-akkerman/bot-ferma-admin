@@ -173,4 +173,18 @@ def tools():
 if __name__ == '__main__':
     # Инициализация базы данных при запуске
     init_db()
-    app.run(debug=True, port=8000)
+    
+    # Получаем порт от Railway или используем 8000 для локальной разработки
+    port = int(os.environ.get('PORT', 8000))
+    
+    # Определяем режим на основе переменной окружения
+    is_production = os.environ.get('RAILWAY_ENVIRONMENT_NAME') is not None
+    
+    print(f"🚀 Starting app on port {port}")
+    print(f"🔧 Environment: {'Production (Railway)' if is_production else 'Development'}")
+    
+    app.run(
+        host='0.0.0.0',  # ОБЯЗАТЕЛЬНО для Railway!
+        port=port,       # Порт от Railway
+        debug=not is_production  # debug=False в продакшене
+    )
