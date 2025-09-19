@@ -122,12 +122,13 @@ def test_tools_template_has_correct_title():
 
 
 def test_dashboard_template_has_statistics_placeholder():
-    """Тест наличия плейсхолдера для статистики в dashboard.html"""
+    """Тест наличия секций статистики в dashboard.html"""
     with open('templates/dashboard.html', 'r', encoding='utf-8') as f:
         content = f.read()
     
-    assert 'statistics-placeholder' in content, "Плейсхолдер для статистики не найден в dashboard.html"
-    assert 'статистика системы' in content, "Текст плейсхолдера статистики не найден"
+    assert 'global-statistics' in content, "Секция глобальной статистики не найдена в dashboard.html"
+    assert 'Общая статистика' in content, "Заголовок 'Общая статистика' не найден"
+    assert 'groups-statistics' in content, "Секция статистики по группам не найдена в dashboard.html"
 
 
 def test_admins_template_has_admins_placeholder():

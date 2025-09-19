@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.security import generate_password_hash
 from models import db, User
 from auth import login_user, logout_user, is_authenticated
+from dashboard import get_dashboard_data
 
 # Создание Flask приложения
 app = Flask(__name__, instance_relative_config=True)
@@ -111,7 +112,14 @@ def logout():
 @app.route('/dashboard')
 def dashboard():
     """Дашборд админки"""
-    return render_template('dashboard.html')
+    try:
+        # Получаем статистику для дашборда
+        dashboard_data = get_dashboard_data()
+        return render_template('dashboard.html', data=dashboard_data)
+    except Exception as e:
+        # Обрабатываем ошибки подключения к PostgreSQL
+        error_message = "Ошибка подключения к базе данных профилей"
+        return render_template('dashboard.html', error=error_message)
 
 
 @app.route('/admins')
@@ -128,4 +136,4 @@ def tools():
 if __name__ == '__main__':
     # Инициализация базы данных при запуске
     init_db()
-    app.run(debug=True)
+    app.run(debug=True, port=8000)

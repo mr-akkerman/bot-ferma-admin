@@ -5,7 +5,61 @@
 {% block content %}
 <h1>Дашборд</h1>
 
-<div class="statistics-placeholder">
-    <p>Здесь будет отображаться статистика системы</p>
-</div>
+{% if error %}
+    <div class="error-message">
+        <p>{{ error }}</p>
+    </div>
+{% elif data %}
+    <!-- Секция глобальной статистики -->
+    <section class="global-statistics">
+        <h2>Общая статистика</h2>
+        <div class="stats-cards">
+            <div class="stat-card">
+                <h3>Общее количество профилей</h3>
+                <p class="stat-value">{{ data.total_count }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Средний возраст профиля (дни)</h3>
+                <p class="stat-value">{{ data.avg_age_days }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Среднее количество доменов</h3>
+                <p class="stat-value">{{ data.avg_domain_count }}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Секция статистики по группам -->
+    <section class="groups-statistics">
+        <h2>Статистика по группам</h2>
+        {% if data.groups_stats %}
+            <table class="groups-table">
+                <thead>
+                    <tr>
+                        <th>Название группы</th>
+                        <th>Количество профилей</th>
+                        <th>Средний возраст (дни)</th>
+                        <th>Среднее количество доменов</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for group in data.groups_stats %}
+                    <tr>
+                        <td>{{ group.party }}</td>
+                        <td>{{ group.count }}</td>
+                        <td>{{ group.avg_age_days }}</td>
+                        <td>{{ group.avg_domains }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-data">Нет данных по группам</p>
+        {% endif %}
+    </section>
+{% else %}
+    <div class="no-data">
+        <p>Нет данных для отображения</p>
+    </div>
+{% endif %}
 {% endblock %}

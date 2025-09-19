@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy import func
 
 # Инициализация SQLAlchemy
 db = SQLAlchemy()
@@ -23,3 +24,30 @@ class Profile(db.Model):
     data_create = db.Column(db.DateTime)
     party = db.Column(db.String)
     domaincount = db.Column(db.Integer)
+    
+    @staticmethod
+    def get_total_count():
+        """Общее количество профилей"""
+        return db.session.query(func.count(Profile.pid)).scalar()
+    
+    @staticmethod
+    def get_average_age_days():
+        """Средний возраст профилей в днях от data_create до сегодня"""
+        return db.session.query(
+            func.avg(func.extract('epoch', func.now() - Profile.data_create) / 86400)
+        ).scalar()
+    
+    @staticmethod
+    def get_average_domain_count():
+        """Среднее количество доменов по всем профилям"""
+        return db.session.query(func.avg(Profile.domaincount)).scalar()
+    
+    @staticmethod
+    def get_groups_stats():
+        """Список групп с количеством профилей, средним возрастом и средними доменами в каждой"""
+        return db.session.query(
+            Profile.party,
+            func.count(Profile.pid).label('count'),
+            func.avg(func.extract('epoch', func.now() - Profile.data_create) / 86400).label('avg_age_days'),
+            func.avg(Profile.domaincount).label('avg_domains')
+        ).group_by(Profile.party).all()
