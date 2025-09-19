@@ -5,35 +5,25 @@ from models import db, User
 from auth import login_user, logout_user, is_authenticated
 from dashboard import get_dashboard_data
 from admin_management import get_admins_list, add_admin, remove_admin
+from config import get_config, validate_config
+
+# Валидация конфигурации при импорте
+try:
+    validate_config()
+except ValueError as e:
+    print(f"❌ Configuration Error: {e}")
+    exit(1)
 
 # Создание Flask приложения
 app = Flask(__name__, instance_relative_config=True)
 
-# Конфигурация приложения
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev_secret_key_change_in_production')
+# Получаем и применяем конфигурацию
+config_class = get_config()
+config_class.init_app(app)
 
-# Конфигурация базы данных для админов (SQLite)
-app.config['ADMIN_DATABASE_URI'] = 'sqlite:///admin.db'
-
-# Конфигурация базы данных для профилей (PostgreSQL)
-app.config['PROFILES_DATABASE_URI'] = os.environ.get(
-    'PROFILES_DATABASE_URL',
-    'postgresql://{}:{}@{}:{}/{}'.format(
-        os.environ.get('DB_USER', 'postgres'),
-        os.environ.get('DB_PASSWORD', 'password'),
-        os.environ.get('DB_HOST', 'localhost'),
-        os.environ.get('DB_PORT', '5432'),
-        os.environ.get('DB_NAME', 'farm_profiles')
-    )
-)
-
-# Конфигурация SQLAlchemy для двух БД
-app.config['SQLALCHEMY_DATABASE_URI'] = app.config['ADMIN_DATABASE_URI']
-app.config['SQLALCHEMY_BINDS'] = {
-    'sqlite': app.config['ADMIN_DATABASE_URI'],
-    'postgres': app.config['PROFILES_DATABASE_URI']
-}
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+print(f"🔧 Using configuration: {config_class.__name__}")
+print(f"🔒 Admin DB: {app.config.get('_ADMIN_DB_URI', 'Not configured')}")
+print(f"📊 Profiles DB: {app.config.get('_PROFILES_DB_URI', 'Not configured')}")
 
 # Инициализация SQLAlchemy
 db.init_app(app)
@@ -57,26 +47,34 @@ def check_auth():
 
 # Функция инициализации базы данных
 def init_db():
-    """Инициализация SQLite базы данных и создание дефолтного админа"""
+    """Инициализация PostgreSQL базы данных админов и создание дефолтного админа"""
     with app.app_context():
-        # Создаем таблицы для SQLite БД
-        db.create_all(bind_key='sqlite')
-        
-        # Проверяем существование дефолтного админа
-        admin_exists = User.query.filter_by(username='admin').first()
-        
-        if not admin_exists:
-            # Создаем дефолтного админа с хешированным паролем
-            password_hash = generate_password_hash('admin')
-            default_admin = User(
-                username='admin',
-                password_hash=password_hash
-            )
-            db.session.add(default_admin)
-            db.session.commit()
-            print("Создан дефолтный админ: admin/admin")
-        else:
-            print("Дефолтный админ уже существует")
+        try:
+            # Создаем таблицы для админской PostgreSQL БД
+            db.create_all(bind_key='admin')
+            print("✅ Admin database tables created/verified")
+            
+            # Проверяем существование дефолтного админа
+            admin_exists = User.query.filter_by(username='admin').first()
+            
+            if not admin_exists:
+                # Создаем дефолтного админа с хешированным паролем
+                password_hash = generate_password_hash('admin')
+                default_admin = User(
+                    username='admin',
+                    password_hash=password_hash
+                )
+                db.session.add(default_admin)
+                db.session.commit()
+                print("✅ Создан дефолтный админ: admin/admin")
+                print("⚠️  ВАЖНО: Измените пароль админа после первого входа!")
+            else:
+                print("ℹ️  Дефолтный админ уже существует")
+                
+        except Exception as e:
+            print(f"❌ Ошибка инициализации базы данных админов: {e}")
+            print("🔍 Проверьте настройки подключения к PostgreSQL для админов")
+            raise
 
 # Роуты авторизации
 @app.route('/')
@@ -118,8 +116,9 @@ def dashboard():
         dashboard_data = get_dashboard_data()
         return render_template('dashboard.html', data=dashboard_data)
     except Exception as e:
-        # Обрабатываем ошибки подключения к PostgreSQL
-        error_message = "Ошибка подключения к базе данных профилей"
+        # Обрабатываем ошибки подключения к PostgreSQL профилей
+        error_message = "Ошибка подключения к базе данных профилей. Проверьте настройки PROFILES_DB_*"
+        print(f"❌ Dashboard error: {e}")
         return render_template('dashboard.html', error=error_message)
 
 

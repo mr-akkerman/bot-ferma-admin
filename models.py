@@ -6,9 +6,9 @@ from werkzeug.security import generate_password_hash
 # Инициализация SQLAlchemy
 db = SQLAlchemy()
 
-# Модель User для SQLite БД админов
+# Модель User для PostgreSQL БД админов
 class User(db.Model):
-    __bind_key__ = 'sqlite'
+    __bind_key__ = 'admin'
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -59,9 +59,9 @@ class User(db.Model):
         """Получить количество админов"""
         return db.session.query(func.count(User.id)).scalar()
 
-# Модель Profile для чтения из PostgreSQL
+# Модель Profile для чтения из PostgreSQL (продакшен база)
 class Profile(db.Model):
-    __bind_key__ = 'postgres'
+    __bind_key__ = 'profiles'
     __tablename__ = 'profiles'
     
     pid = db.Column(db.Integer, primary_key=True)
@@ -72,26 +72,49 @@ class Profile(db.Model):
     @staticmethod
     def get_total_count():
         """Общее количество профилей"""
-        return db.session.query(func.count(Profile.pid)).scalar()
+        engine = db.get_engine(bind='profiles')
+        with engine.connect() as conn:
+            result = conn.execute(db.text('SELECT COUNT(pid) FROM profiles')).scalar()
+            return result
     
     @staticmethod
     def get_average_age_days():
         """Средний возраст профилей в днях от data_create до сегодня"""
-        return db.session.query(
-            func.avg(func.extract('epoch', func.now() - Profile.data_create) / 86400)
-        ).scalar()
+        engine = db.get_engine(bind='profiles')
+        with engine.connect() as conn:
+            result = conn.execute(db.text('''
+                SELECT AVG(EXTRACT(epoch FROM CURRENT_TIMESTAMP - data_create) / 86400)
+                FROM profiles
+                WHERE data_create IS NOT NULL
+            ''')).scalar()
+            return result
     
     @staticmethod
     def get_average_domain_count():
         """Среднее количество доменов по всем профилям"""
-        return db.session.query(func.avg(Profile.domaincount)).scalar()
+        engine = db.get_engine(bind='profiles')
+        with engine.connect() as conn:
+            result = conn.execute(db.text('''
+                SELECT AVG(domaincount)
+                FROM profiles
+                WHERE domaincount IS NOT NULL
+            ''')).scalar()
+            return result
     
     @staticmethod
     def get_groups_stats():
         """Список групп с количеством профилей, средним возрастом и средними доменами в каждой"""
-        return db.session.query(
-            Profile.party,
-            func.count(Profile.pid).label('count'),
-            func.avg(func.extract('epoch', func.now() - Profile.data_create) / 86400).label('avg_age_days'),
-            func.avg(Profile.domaincount).label('avg_domains')
-        ).group_by(Profile.party).all()
+        engine = db.get_engine(bind='profiles')
+        with engine.connect() as conn:
+            result = conn.execute(db.text('''
+                SELECT 
+                    party,
+                    COUNT(pid) as count,
+                    AVG(EXTRACT(epoch FROM CURRENT_TIMESTAMP - data_create) / 86400) as avg_age_days,
+                    AVG(domaincount) as avg_domains
+                FROM profiles
+                WHERE data_create IS NOT NULL
+                GROUP BY party
+                ORDER BY count DESC
+            ''')).fetchall()
+            return result

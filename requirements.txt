@@ -4,3 +4,4 @@ Werkzeug
 psycopg2-binary
 pytest
 beautifulsoup4
+python-dotenv
