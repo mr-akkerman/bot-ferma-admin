@@ -27,23 +27,23 @@ class TestVercelStyles:
         css_path = os.path.join(os.path.dirname(__file__), 'static', 'css', 'style.css')
         assert os.path.exists(css_path), "CSS файл должен существовать"
     
-    def test_vercel_color_variables(self):
-        """Проверка наличия точных цветов Vercel в CSS переменных"""
-        # Основные цвета фона
-        assert "--background-1: #FFFFFF" in self.css_content, "Должен быть основной фон #FFFFFF"
-        assert "--background-2: #FAFAFA" in self.css_content, "Должен быть вторичный фон #FAFAFA"
+    def test_vercel_dark_color_variables(self):
+        """Проверка наличия темной цветовой схемы Vercel в CSS переменных"""
+        # Основные темные цвета фона
+        assert "--background-1: #000000" in self.css_content, "Должен быть черный основной фон #000000"
+        assert "--background-2: #111111" in self.css_content, "Должен быть темный вторичный фон #111111"
         
-        # Цвета для состояний
-        assert "--color-1: #F5F5F5" in self.css_content, "Должен быть цвет hover #F5F5F5"
-        assert "--color-2: #E5E5E5" in self.css_content, "Должен быть цвет active #E5E5E5"
-        assert "--color-3: #D4D4D4" in self.css_content, "Должен быть цвет границ #D4D4D4"
+        # Темные цвета для состояний
+        assert "--color-1: #1A1A1A" in self.css_content, "Должен быть цвет hover #1A1A1A"
+        assert "--color-2: #262626" in self.css_content, "Должен быть цвет active #262626"
+        assert "--color-3: #404040" in self.css_content, "Должен быть цвет границ #404040"
         
-        # Цвета текста
-        assert "--foreground-1: #171717" in self.css_content, "Должен быть основной текст #171717"
-        assert "--foreground-2: #737373" in self.css_content, "Должен быть вторичный текст #737373"
+        # Светлые цвета текста для темной темы
+        assert "--foreground-1: #FAFAFA" in self.css_content, "Должен быть светлый основной текст #FAFAFA"
+        assert "--foreground-2: #A1A1A1" in self.css_content, "Должен быть серый вторичный текст #A1A1A1"
         
-        # Акцентный цвет
-        assert "--accent: #000000" in self.css_content, "Должен быть акцентный цвет #000000"
+        # Белый акцентный цвет
+        assert "--accent: #FFFFFF" in self.css_content, "Должен быть белый акцентный цвет #FFFFFF"
     
     def test_geist_typography(self):
         """Проверка типографики Geist"""
@@ -275,6 +275,31 @@ class TestVercelStyles:
         
         for style in login_styles:
             assert style in self.css_content, f"Должен быть стиль для логина: {style}"
+
+    def test_dark_theme_consistency(self):
+        """Проверка последовательности темной темы"""
+        # Проверим, что нет светлых цветов в CSS
+        light_colors = ["#FFFFFF", "#FAFAFA", "#F5F5F5", "#E5E5E5", "#D4D4D4"]
+        
+        # Исключения - эти светлые цвета допустимы для текста и акцентов в темной теме
+        allowed_light_usage = [
+            "--foreground-1: #FAFAFA",  # белый текст
+            "--accent: #FFFFFF",        # белый акцент
+        ]
+        
+        for color in light_colors:
+            if color in ["#FAFAFA", "#FFFFFF"]:
+                # Эти цвета допустимы только в определенном контексте
+                continue
+            
+            # Остальные светлые цвета не должны использоваться в темной теме
+            if color in self.css_content:
+                # Проверим контекст использования
+                lines_with_color = [line for line in self.css_content.split('\n') if color in line]
+                for line in lines_with_color:
+                    # Если это не комментарий и не допустимое использование
+                    if not line.strip().startswith('/*') and not any(allowed in line for allowed in allowed_light_usage):
+                        pytest.fail(f"Светлый цвет {color} не должен использоваться в темной теме: {line.strip()}")
 
 
 if __name__ == "__main__":

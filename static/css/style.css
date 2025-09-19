@@ -4,17 +4,17 @@
    БАЗОВЫЕ СТИЛИ И ЦВЕТОВАЯ СХЕМА
 ======================================== */
 
-/* CSS Variables для точной цветовой схемы Vercel */
+/* CSS Variables для темной цветовой схемы Vercel */
 :root {
-  /* Цветовая схема Vercel Geist */
-  --background-1: #FFFFFF;     /* основной фон страниц */
-  --background-2: #FAFAFA;     /* тонкое различие для UI компонентов */
-  --color-1: #F5F5F5;          /* hover состояния */
-  --color-2: #E5E5E5;          /* active состояния и границы */
-  --color-3: #D4D4D4;          /* borders для мелких элементов */
-  --foreground-1: #171717;     /* основной текст */
-  --foreground-2: #737373;     /* вторичный текст */
-  --accent: #000000;           /* чёрный для кнопок и активных элементов */
+  /* Темная цветовая схема Vercel Geist */
+  --background-1: #000000;     /* основной черный фон */
+  --background-2: #111111;     /* темный фон для UI компонентов */
+  --color-1: #1A1A1A;          /* hover состояния */
+  --color-2: #262626;          /* active состояния и границы */
+  --color-3: #404040;          /* borders для мелких элементов */
+  --foreground-1: #FAFAFA;     /* основной белый текст */
+  --foreground-2: #A1A1A1;     /* серый вторичный текст */
+  --accent: #FFFFFF;           /* белый для кнопок и активных элементов */
   
   /* Danger цвета */
   --danger: #EF4444;
@@ -22,13 +22,13 @@
   
   /* Success цвета */
   --success: #10B981;
-  --success-bg: #F0FDF4;
-  --success-border: #BBF7D0;
+  --success-bg: #0F1419;
+  --success-border: #1F2937;
   
   /* Error цвета */
   --error: #EF4444;
-  --error-bg: #FEF2F2;
-  --error-border: #FECACA;
+  --error-bg: #1F1415;
+  --error-border: #2D1B1F;
   
   /* Типографика */
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
@@ -419,7 +419,8 @@ header nav h1 {
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: var(--foreground-1);
+  background-color: var(--color-3);
+  color: var(--foreground-1);
 }
 
 .btn-danger {
