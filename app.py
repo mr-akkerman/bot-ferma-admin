@@ -1,9 +1,10 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash
 from models import db, User
 from auth import login_user, logout_user, is_authenticated
 from dashboard import get_dashboard_data
+from admin_management import get_admins_list, add_admin, remove_admin
 
 # Создание Flask приложения
 app = Flask(__name__, instance_relative_config=True)
@@ -46,8 +47,8 @@ def require_auth():
 @app.before_request
 def check_auth():
     """Проверяет авторизацию перед каждым запросом"""
-    # Пропускаем проверку для /login и /logout
-    if request.endpoint in ['login', 'logout']:
+    # Пропускаем проверку для /login, /logout и статических файлов
+    if request.endpoint in ['login', 'logout', 'static']:
         return
     
     # Для всех остальных роутов проверяем авторизацию
@@ -125,7 +126,44 @@ def dashboard():
 @app.route('/admins')
 def admins():
     """Управление админами"""
-    return render_template('admins.html')
+    # Получаем список всех админов
+    result = get_admins_list()
+    if result['success']:
+        return render_template('admins.html', admins=result['admins'])
+    else:
+        return render_template('admins.html', error=result['error'])
+
+
+@app.route('/admins/add', methods=['POST'])
+def add_admin_route():
+    """Добавление нового админа"""
+    username = request.form.get('username')
+    password = request.form.get('password')
+    
+    if not username or not password:
+        return render_template('admins.html', error='Имя пользователя и пароль обязательны')
+    
+    result = add_admin(username, password)
+    if result['success']:
+        return redirect(url_for('admins'))
+    else:
+        # Получаем список админов для отображения с ошибкой
+        admins_result = get_admins_list()
+        admins = admins_result['admins'] if admins_result['success'] else []
+        return render_template('admins.html', error=result['error'], admins=admins)
+
+
+@app.route('/admins/delete/<int:user_id>', methods=['POST'])
+def delete_admin_route(user_id):
+    """Удаление админа"""
+    result = remove_admin(user_id)
+    if result['success']:
+        return redirect(url_for('admins'))
+    else:
+        # Получаем список админов для отображения с ошибкой
+        admins_result = get_admins_list()
+        admins = admins_result['admins'] if admins_result['success'] else []
+        return render_template('admins.html', error=result['error'], admins=admins)
 
 
 @app.route('/tools')

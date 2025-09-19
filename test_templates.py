@@ -86,8 +86,8 @@ class TestTemplates:
         with open('templates/login.html', 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # Проверяем extends
-        assert '{% extends "base.html" %}' in content, "Отсутствует наследование от base.html"
+        # Проверяем extends (теперь от login_layout.html)
+        assert '{% extends "login_layout.html" %}' in content, "Отсутствует наследование от login_layout.html"
         
         # Проверяем блоки
         assert '{% block title %}' in content, "Отсутствует блок title"

@@ -70,7 +70,7 @@ def test_admins_route_authorized(client):
     
     assert response.status_code == 200, "Admins должен быть доступен для авторизованного пользователя"
     assert 'Управление админами' in response.data.decode('utf-8'), "Admins должен содержать заголовок 'Управление админами'"
-    assert 'список администраторов' in response.data.decode('utf-8'), "Admins должен содержать плейсхолдер списка админов"
+    assert 'Управление админами' in response.data.decode('utf-8'), "Admins должен содержать заголовок управления админами"
 
 
 def test_tools_route_authorized(client):
@@ -132,7 +132,7 @@ def test_all_routes_render_correct_templates(client):
     assert admins_response.status_code == 200
     admins_content = admins_response.data.decode('utf-8')
     assert 'Управление админами - Admin Panel' in admins_content, "Admins должен иметь корректный title"
-    assert 'admins-placeholder' in admins_content, "Admins должен содержать плейсхолдер админов"
+    assert 'admin-form' in admins_content, "Admins должен содержать форму добавления админа"
     
     # Проверяем tools
     tools_response = client.get('/tools')

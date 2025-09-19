@@ -10,6 +10,11 @@
     <header>
         <nav>
             <h1>Admin Panel</h1>
+            <div class="header-actions">
+                <form method="POST" action="{{ url_for('logout') }}" style="display: inline;">
+                    <button type="submit" class="btn btn-danger btn-small">Выйти</button>
+                </form>
+            </div>
         </nav>
     </header>
     

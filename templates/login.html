@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+{% extends "login_layout.html" %}
 
 {% block title %}Вход - Admin Panel{% endblock %}
 
 {% block content %}
 <div class="login-container">
     <h2>Вход в систему</h2>
-    <form method="POST" action="{{ url_for('index') }}">
+    <form method="POST" action="{{ url_for('login') }}">
         <div class="form-group">
             <label for="username">Имя пользователя:</label>
             <input type="text" id="username" name="username" required>

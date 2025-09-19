@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from sqlalchemy import func
+from werkzeug.security import generate_password_hash
 
 # Инициализация SQLAlchemy
 db = SQLAlchemy()
@@ -14,6 +15,49 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    @staticmethod
+    def get_all_admins():
+        """Получить всех админов с id, username, created_at"""
+        return db.session.query(User.id, User.username, User.created_at).all()
+    
+    @staticmethod
+    def create_admin(username, password):
+        """Создать нового админа с хешированным паролем"""
+        password_hash = generate_password_hash(password)
+        new_admin = User(
+            username=username,
+            password_hash=password_hash
+        )
+        db.session.add(new_admin)
+        db.session.commit()
+        return new_admin
+    
+    @staticmethod
+    def delete_admin(user_id):
+        """Удалить админа по ID с проверкой что не удаляем последнего"""
+        admin = db.session.get(User, user_id)
+        if not admin:
+            return False
+        
+        # Проверяем количество админов
+        admin_count = User.get_admin_count()
+        if admin_count <= 1:
+            raise ValueError("Нельзя удалить последнего админа")
+        
+        db.session.delete(admin)
+        db.session.commit()
+        return True
+    
+    @staticmethod
+    def admin_exists(username):
+        """Проверить существование админа по имени"""
+        return User.query.filter_by(username=username).first() is not None
+    
+    @staticmethod
+    def get_admin_count():
+        """Получить количество админов"""
+        return db.session.query(func.count(User.id)).scalar()
 
 # Модель Profile для чтения из PostgreSQL
 class Profile(db.Model):

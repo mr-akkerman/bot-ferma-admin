@@ -132,12 +132,14 @@ def test_dashboard_template_has_statistics_placeholder():
 
 
 def test_admins_template_has_admins_placeholder():
-    """Тест наличия плейсхолдера для списка админов в admins.html"""
+    """Тест наличия структуры для управления админами в admins.html"""
     with open('templates/admins.html', 'r', encoding='utf-8') as f:
         content = f.read()
     
-    assert 'admins-placeholder' in content, "Плейсхолдер для админов не найден в admins.html"
-    assert 'список администраторов' in content, "Текст плейсхолдера админов не найден"
+    # Проверяем реальную структуру вместо плейсхолдера
+    assert 'admin-form' in content, "Форма добавления админа не найдена в admins.html"
+    assert 'admins-table' in content, "Таблица админов не найдена в admins.html"
+    assert 'Существующие администраторы' in content, "Заголовок списка администраторов не найден"
 
 
 def test_tools_template_has_development_message():
